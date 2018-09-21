@@ -12,7 +12,7 @@ var eyeImage1, eyeImage2, closedeyeImage1, closedeyeImage2, legImage1, legImage2
 var winkPlobability = 0.05;
 var sleepPlobability = 0.001;
 var isWalk = false;
-var maxWalkDegree = 15;
+var maxWalkDegree = 10;
 var nowWalkDegree = 0;
 var rotateSpeed = 2.5;
 var walkX = 0;
@@ -23,6 +23,7 @@ var walkSpeed = 3.0;
 var border1 = 600;
 var border2 = 1000;
 var moreRoll = 0;
+var moreRoll2 = 0;
 // ----------------------------------------------
 var ClassNumber = {
   number: 0,
@@ -93,15 +94,15 @@ var ClassClockHands = {
   Update: function() {
     switch (this.name) {
       case "second":
-        this.rotate = map(second(), 0, 60, 0, 360) + pow(moreRoll,2);
+        this.rotate = map(second(), 0, 60, 0, 360) + moreRoll2;
         break;
       case "minute":
-        this.rotate = map(minute(), 0, 60, 0, 360) + map(second(), 0, 60, 0, 6) + pow(moreRoll,2);
+        this.rotate = map(minute(), 0, 60, 0, 360) + map(second(), 0, 60, 0, 6) + moreRoll2;
         break;
       case "hour":
        	//this.rotate = map(hour(), 0, 23, 0, 690) + map(minute(), 0, 60, 0, 30);
        	var d = atan2(Numbers[hour12].y+walkY, Numbers[hour12].x+walkX);
-       	this.rotate = map(d, -180, 180, 0, 360)-90 + map(minute(), 0, 60, 0, 30) + pow(moreRoll,2);  
+       	this.rotate = map(d, -180, 180, 0, 360)-90 + map(minute(), 0, 60, 0, 30) + moreRoll2;  
 
         break;
     }
@@ -389,12 +390,12 @@ function setup() {
   init();
 
   //画像 setup image
-  eyeImage1 = loadImage("https://raw.githubusercontent.com/mrdkosy/CMU/master/eye2.png");
-  eyeImage2 = loadImage("https://raw.githubusercontent.com/mrdkosy/CMU/master/eye2.png");
-  closedeyeImage1 = loadImage("https://raw.githubusercontent.com/mrdkosy/CMU/master/closedeye2.png");
-  closedeyeImage2 = loadImage("https://raw.githubusercontent.com/mrdkosy/CMU/master/closedeye2.png");
-  legImage1 = loadImage("https://raw.githubusercontent.com/mrdkosy/CMU/master/leg_right3.png");
-  legImage2 = loadImage("https://raw.githubusercontent.com/mrdkosy/CMU/master/leg_left3.png");
+  eyeImage1 = loadImage("https://raw.githubusercontent.com/mrdkosy/CMU-Material/master/eye2.png");
+  eyeImage2 = loadImage("https://raw.githubusercontent.com/mrdkosy/CMU-Material/master/eye2.png");
+  closedeyeImage1 = loadImage("https://raw.githubusercontent.com/mrdkosy/CMU-Material/master/closedeye2.png");
+  closedeyeImage2 = loadImage("https://raw.githubusercontent.com/mrdkosy/CMU-Material/master/closedeye2.png");
+  legImage1 = loadImage("https://raw.githubusercontent.com/mrdkosy/CMU-Material/master/leg_right3.png");
+  legImage2 = loadImage("https://raw.githubusercontent.com/mrdkosy/CMU-Material/master/leg_left3.png");
 
 
   //画面設定 screen settings
@@ -438,7 +439,7 @@ function draw() {
 
   push();
   translate(walkX, walkY);
-  Leg.Draw();
+  //Leg.Draw();
   Numbers[hour12].Draw();
   Eye.Draw();
   pop();
@@ -466,7 +467,7 @@ function NumberAnimationControl() {
 
 
   //歩く動き walk motion
-  if (second() == 25 && !isWalk) isWalk = true; //debug---
+  if (second() == 10 && !isWalk) isWalk = true; //debug---
 
    
   if (isWalk) { //歩いている walking
@@ -543,11 +544,13 @@ function drawShader() {
 
   //画面の外に出たか outside screen or not
   if( _x > width/2 || _y > height/2 || _x < -width/2 || _y < -height/2){
-	moreRoll +=0.3;
+	if(!isOutsideScreen) moreRoll +=0.2;
   }else {
   	isOutsideScreen = false;
   	moreRoll = 0;
+    moreRoll2 = 0;
   }
+  moreRoll2 += moreRoll;
 
   //border1の外に出たか outside border1 or not
   if( _x > border1 || _y > border1 || _x < -border1 || _y < -border1) 
