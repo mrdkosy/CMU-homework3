@@ -368,7 +368,6 @@ var Heart = {
       rotate(nowWalkDegree);
       var s = this.size;
       if(frameCount%20 == 0) s *= 1.25;
-      console.log(frameCount%5);
       image(heartImage, this.x1, this.y1,
         heartImage.width * s, heartImage.height * s);
       pop();
@@ -484,6 +483,7 @@ function draw() {
 
   //時間が変わったかどうか whether the hour has been just changed or not
   h = hour() % 12;
+  //h = 8;
   if (isChangeHour) isChangeHour = false;
   if (hour12 != h) isChangeHour = true;
   hour12 = h;
