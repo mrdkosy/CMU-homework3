@@ -8,7 +8,7 @@ var hour12 = -1; //時間表示 12-hour
 var isChangeHour = false;
 var isStartNumberAnimation = false;
 var numberAnimationFrameCounter = 0;
-var eyeImage1, eyeImage2, closedeyeImage1, closedeyeImage2, legImage1, legImage2;
+var eyeImage1, eyeImage2, closedeyeImage1, closedeyeImage2, legImage1, legImage2, heartIamge;
 var winkPlobability = 0.05;
 var sleepPlobability = 0.001;
 var isWalk = false;
@@ -337,6 +337,61 @@ var LegParameter = [ //x1, y1, x2, y2, size
 ];
 
 // ----------------------------------------------
+var Heart = {
+  x: 0,
+  y: 0,
+  x1: 0,
+  y1: 0,
+  size: 1,
+  Init: function(x, y, x1, y1, size){
+    this.x = x;
+    this.y = y;
+    this.x1 = x1;
+    this.y1 = y1;
+    this.size = size;
+  },
+  Update: function(){
+    if (isChangeHour){
+      this.Init(
+        Numbers[hour12].x,
+        Numbers[hour12].y,
+        HeartParameter[hour12][2],
+        HeartParameter[hour12][3],
+        HeartParameter[hour12][4]
+      );
+    }
+  },
+  Draw: function(){
+      this.Update();
+      push();
+      translate(this.x, this.y);
+      rotate(nowWalkDegree);
+      var s = this.size;
+      if(frameCount%20 == 0) s *= 1.25;
+      console.log(frameCount%5);
+      image(heartImage, this.x1, this.y1,
+        heartImage.width * s, heartImage.height * s);
+      pop();
+  }
+};
+
+var HeartParameter = [
+  [0,0,100,-50,0.13], //12
+  [0,0,25,73,0.08], //1
+  [0,0,0,40,0.095], //2
+  [0,0,50,30,0.14], //3
+  [0,0,33,48,0.08], //4
+  [0,0,35,32,0.1], //5
+  [0,0,-35,-30,0.12], //6
+  [0,0,18,38,0.09], //7
+  [0,0,-33,20,0.1], //8
+  [0,0,23,43,0.08], //9
+  [0,0,100,68,0.12], //10
+  [0,0,45,50,0.075] //11
+];
+
+
+// ----------------------------------------------
 function init() {
 
   for (var i = 0; i < NumbersParameter.length; i++) {
@@ -383,6 +438,14 @@ function init() {
     LegParameter[0][6],
     LegParameter[0][7]
   );
+
+  Heart.Init(
+    HeartParameter[0][0],
+    HeartParameter[0][1],
+    HeartParameter[0][2],
+    HeartParameter[0][3],
+    HeartParameter[0][4]
+  );
 }
 
 function setup() {
@@ -396,7 +459,7 @@ function setup() {
   closedeyeImage2 = loadImage("https://raw.githubusercontent.com/mrdkosy/CMU-Material/master/closedeye2.png");
   legImage1 = loadImage("https://raw.githubusercontent.com/mrdkosy/CMU-Material/master/leg_right3.png");
   legImage2 = loadImage("https://raw.githubusercontent.com/mrdkosy/CMU-Material/master/leg_left3.png");
-
+  heartImage = loadImage("https://raw.githubusercontent.com/mrdkosy/CMU-Material/master/heart.png");
 
   //画面設定 screen settings
   Canvas = createCanvas(800, 800, P2D);
@@ -426,6 +489,7 @@ function draw() {
   hour12 = h;
 
 
+
   NumberAnimationControl();
 
 
@@ -442,6 +506,7 @@ function draw() {
   //Leg.Draw();
   Numbers[hour12].Draw();
   Eye.Draw();
+  Heart.Draw();
   pop();
 
 }
